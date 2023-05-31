@@ -1,2 +1,2 @@
-# DeepNCSE
-code for DeepNCSE
+# DeepNCSPP
+code for DeepNCSPP
