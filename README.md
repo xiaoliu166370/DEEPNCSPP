@@ -1,7 +1,7 @@
 # DeepNCSPP
 DeepNCSPP: A non-classical secreted protein prediction model based on deep learning
 
-# Requirement
+# Requirements
 Python==3.8.16<br>
 Pytorch-GPU==2.0.0<br>
 Numpy==1.24.3<br>
