@@ -6,7 +6,7 @@ from torch import nn
 from torch.nn.utils import clip_grad_norm
 from precess import load_data_PeNGaRoo
 from torch.utils import data
-from model.model import BiRNN
+from model.model import DeepNCSPP
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix, average_precision_score
 from sklearn.metrics import matthews_corrcoef, roc_auc_score
 from sklearn.metrics import accuracy_score
@@ -46,7 +46,7 @@ mcc = 0
 ks = 5
 X, Xs, y, test_X, tests, test_y, vocab = load_data_PeNGaRoo(1000)
 print(len(vocab))
-net = BiRNN(21, 32, 512, 2, 0.5).to(device)
+net = DeepNCSPP(21, 32, 512, 2, 0.5).to(device)
 net.apply(xavier_init_weights)
 
 lr, num_epochs = 0.00005, 50
@@ -85,7 +85,6 @@ for epoch in range(num_epochs):
         tfakes_p += fake[:, 1].cpu().detach().numpy().tolist()
         tyts += y_data.cpu().detach().view(-1).numpy().tolist()
 
-        # c_loss.backward()
         loss = criterion(fake, y_data)
 
         optimizer.zero_grad()
@@ -105,9 +104,7 @@ for epoch in range(num_epochs):
     fake_test = net(t_X, t_X_s.unsqueeze(1)).cpu().detach()
 
     fakes = torch.argmax(fake_test, dim=1).numpy().tolist()
-    # print(fakes)
     fakes_p = fake_test[:, 1].numpy().tolist()
-    # print(fakes_p)
     con = confusion_matrix(yts, fakes)
     TP = con[1, 1]
     TN = con[0, 0]
