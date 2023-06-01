@@ -6,7 +6,7 @@ from torch import nn
 from torch.nn.utils import clip_grad_norm
 from precess import load_data_PeNGaRoo
 from torch.utils import data
-from model.model import BiRNN
+from model.model import DeepNCSPP
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix,average_precision_score
 from sklearn.metrics import matthews_corrcoef, roc_auc_score
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     X,Xs, y, test_X,tests, test_y, vocab = load_data_PeNGaRoo(1000)
     for index, (train, test) in enumerate(kf.split(X, y)):
 
-        net = BiRNN(21, 32, 512, 2, 0.5).to(device)
+        net = DeepNCSPP(21, 32, 512, 2, 0.5).to(device)
         net.apply(xavier_init_weights)
 
         lr = 0.00005
@@ -73,8 +73,7 @@ if __name__ == '__main__':
 
         train_iter = load_array((torch.tensor(X_train, dtype=torch.long), torch.tensor(X_trains, dtype=torch.float32),torch.tensor(y_train, dtype=torch.long)),
                                 batch_size, True)
-        # test_iter = load_array((torch.tensor(X_test, dtype=torch.long), torch.tensor(y_test, dtype=torch.long)),
-        #                        batch_size)
+       
         score_best = 0.0
         acc_best = 0.0
 
@@ -101,10 +100,10 @@ if __name__ == '__main__':
                 y_data = y_data.to(device)
                 fake = net(x_data,xs.unsqueeze(1))
                 tfakes += torch.argmax(fake.cpu().detach(), dim=1).numpy().tolist()
-                # print(fakes)
+                
                 tfakes_p += fake[:, 1].cpu().detach().numpy().tolist()
                 tyts += y_data.cpu().detach().view(-1).numpy().tolist()
-                # c_loss.backward()
+                
                 loss = criterion(fake, y_data)
 
                 optimizer.zero_grad()
@@ -112,8 +111,7 @@ if __name__ == '__main__':
                 clip_grad_norm(net.parameters(), 0.5)
                 optimizer.step()
 
-            # print(f'train acc: {accuracy_score(tyts, tfakes)}, pre: {precision_score(tyts, tfakes)},'
-            #       f' recall: {recall_score(tyts, tfakes)}, f1：{f1_score(tyts, tfakes)}, MCC: {matthews_corrcoef(tyts, tfakes)}, AUC: {roc_auc_score(tyts, tfakes_p)}')
+            
             net.eval()
 
             yts = y_test
@@ -123,7 +121,7 @@ if __name__ == '__main__':
             fake_test = net(t_X,ts.unsqueeze(1)).cpu().detach()
 
             fakes = torch.argmax(fake_test, dim=1).numpy().tolist()
-            # print(fakes)
+            
             fakes_p = fake_test[:, 1].numpy().tolist()
             con = confusion_matrix(yts, fakes)
             TP = con[1, 1]
@@ -138,7 +136,6 @@ if __name__ == '__main__':
             recall_ = recall_score(yts, fakes)
             auc_ = roc_auc_score(yts, fakes_p)
             aupr_ = average_precision_score(yts, fakes_p)
-            # print(f'test acc:{acc_}, pre: {pre_}, recall: {recall_}, f1: {f1_}, MCC: {score_}, AUC: {auc_}')
             if score_ > score_best:
                 score_best = score_
                 acc_best = acc_
