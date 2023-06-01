@@ -17,7 +17,7 @@ python train_test.py
 
 # demo
 To facilitate testing, we put a trained weight parameter file in the demo folder demo/model.params<br>
-python demo
+python demo.py
 
 # Note
 If you want to train and get the same experimental results, please use the same operating system Windows 10 and the packages in requirements
