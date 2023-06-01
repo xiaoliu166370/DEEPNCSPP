@@ -1,7 +1,7 @@
 import os
 import torch
 from precess import load_data_PeNGaRoo
-from model.model import BiRNN
+from model.model import DeepNCSPP
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix, average_precision_score
 from sklearn.metrics import matthews_corrcoef, roc_auc_score
 from sklearn.metrics import accuracy_score
@@ -28,7 +28,7 @@ ks = 5
 X, Xs, y, test_X, tests, test_y, vocab = load_data_PeNGaRoo(1000)
 print(len(vocab))
 # net = TransformerEncoder(21, 32, 32, 32, 32, [32], 32, 128, 8, 1, 0.5).to(device)
-net = BiRNN(21, 32, 512, 2, 0.5).to(device)
+net = DeepNCSPP(21, 32, 512, 2, 0.5).to(device)
 
 net.load_state_dict(torch.load('model.params'))
 # test_iter = load_array((torch.tensor(X_test, dtype=torch.long), torch.tensor(y_test, dtype=torch.long)),
