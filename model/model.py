@@ -6,7 +6,6 @@ from torch.nn import functional as F
 
 
 def transpose_qkv(X, num_heads):
-    """为了多注意力头的并行计算而变换形状"""
 
     X = X.reshape(X.shape[0], X.shape[1], num_heads, -1)
 
@@ -16,14 +15,14 @@ def transpose_qkv(X, num_heads):
 
 
 def transpose_output(X, num_heads):
-    """逆转transpose_qkv函数的操作"""
+   
     X = X.reshape(-1, num_heads, X.shape[1], X.shape[2])
     X = X.permute(0, 2, 1, 3)
     return X.reshape(X.shape[0], X.shape[1], -1)
 
 
 class DotProductAttention(nn.Module):
-    """缩放点积注意力"""
+   
 
     def __init__(self, dropout):
         super(DotProductAttention, self).__init__()
@@ -37,7 +36,7 @@ class DotProductAttention(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
-    """多头注意力"""
+   
 
     def __init__(self, key_size, query_size, value_size, num_hiddens,
                  num_heads, dropout, bias=False):
@@ -59,7 +58,7 @@ class MultiHeadAttention(nn.Module):
 
 
 class PositionWiseFFN(nn.Module):
-    """基于位置的前馈网络"""
+    
 
     def __init__(self, ffn_num_input, ffn_num_hiddens, ffn_num_outputs):
         super(PositionWiseFFN, self).__init__()
@@ -72,7 +71,7 @@ class PositionWiseFFN(nn.Module):
 
 
 class AddNorm(nn.Module):
-    """残差连接后进行层规范化"""
+    
 
     def __init__(self, normalized_shape, dropout, ):
         super(AddNorm, self).__init__()
@@ -84,7 +83,7 @@ class AddNorm(nn.Module):
 
 
 class EncoderBlock(nn.Module):
-    """transformer编码器块"""
+    
 
     def __init__(self, key_size, query_size, value_size, num_hiddens,
                  norm_shape, ffn_num_input, ffn_num_hiddens, num_heads,
@@ -141,10 +140,10 @@ class EncoderBlock(nn.Module):
         return X7
 
 
-class BiRNN(nn.Module):
+class DeepNCSPP(nn.Module):
     def __init__(self, vocab_size, embed_size, num_hiddens,
                  num_layers, dropout, **kwargs):
-        super(BiRNN, self).__init__(**kwargs)
+        super(DeepNCSPP, self).__init__(**kwargs)
 
         self.embedding = nn.Embedding(vocab_size, embed_size)
         self.encoder = nn.LSTM(embed_size, num_hiddens, num_layers=num_layers,
@@ -184,5 +183,5 @@ if __name__ == '__main__':
     data = torch.ones(4, 500, dtype=torch.long)
     data2 = torch.randn((4, 20)).unsqueeze(1)
     print(data2.shape)
-    net = BiRNN(21, 32, 512, 2, 0.5)
+    net = DeepNCSPP(21, 32, 512, 2, 0.5)
     print(net(data, data2).shape)
