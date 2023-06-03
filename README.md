@@ -20,6 +20,6 @@ To facilitate testing, we put a trained weight parameter file in the demo folder
 python demo.py
 
 # Note
-If you want to train and get the same experimental results, please use the same operating system Windows 10 and the packages in requirements
+If you want to train and get the same experimental results, please use the same operating system Windows 10,RTX 3060 graphics card and packages in requirements
 
 
