@@ -9,10 +9,10 @@ cuda version 11.7<br>
 cudnn version 8.0<br>
 conda install pytorch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.7 -c pytorch -c nvidia
 
-# train cross validation 
+# train and cross validation 
 python train.py
 
-# train test dataset
+# train and test
 python train_test.py
 
 # demo
